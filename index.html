@@ -2,23 +2,35 @@
 <html lang="tr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Ödeme Takip</title>
 
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#111827" />
   <link rel="stylesheet" href="style.css" />
 
-  <!-- iOS: Ana ekrana ekleme ikonunu daha düzgün gösterir (ikon koymazsan da çalışır) -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
+
 <body>
   <div class="wrap">
     <header>
       <h1>Ödeme Takip</h1>
-      <div class="sub">Tik at → gider düşsün → bakiye görünsün. (Dram yok, matematik var.)</div>
+      <div class="sub">Ay seç → gider ekle → tik at → bakiye düşsün.</div>
     </header>
+
+    <!-- AY SEKME -->
+    <section class="card">
+      <div class="row">
+        <h2>Aylık</h2>
+        <div class="monthActions">
+          <button id="prevMonth" class="btn ghost">◀</button>
+          <button id="nextMonth" class="btn ghost">▶</button>
+        </div>
+      </div>
+      <div class="monthsBar" id="monthsBar"></div>
+    </section>
 
     <section class="card">
       <h2>Gelir</h2>
@@ -56,24 +68,28 @@
     <section class="card">
       <div class="row">
         <h2>Giderler</h2>
-        <button id="clearPaid" class="btn ghost" title="Ödenenleri listeden kaldırır (geçmiş kayıt tutmak istersen söyle, arşiv ekleriz)">Ödenenleri Temizle</button>
+        <button id="clearPaid" class="btn ghost" title="Bu ayın ödenenlerini listeden kaldırır">Ödenenleri Temizle</button>
       </div>
 
-      <div class="tableWrap">
+      <!-- DESKTOP TABLO -->
+      <div class="tableWrap desktopOnly">
         <table>
           <thead>
             <tr>
-              <th style="width:90px;">Ödendi</th>
+              <th style="width:70px;">Ödendi</th>
               <th>Açıklama</th>
-              <th style="width:130px;">Kategori</th>
-              <th style="width:110px;">Vade</th>
-              <th style="width:130px;">Tutar</th>
-              <th style="width:90px;"></th>
+              <th style="width:120px;">Kategori</th>
+              <th style="width:120px;">Vade</th>
+              <th style="width:120px;">Tutar</th>
+              <th style="width:170px;"></th>
             </tr>
           </thead>
           <tbody id="expenseBody"></tbody>
         </table>
       </div>
+
+      <!-- MOBILE KART LİSTE -->
+      <div class="mobileOnly" id="expenseCards"></div>
     </section>
 
     <section class="card">
@@ -101,14 +117,45 @@
       </div>
     </section>
 
+    <!-- DÜZENLEME MODAL -->
+    <dialog id="editDlg" class="dlg">
+      <form method="dialog" class="dlgBox">
+        <h3>Gider Düzenle</h3>
+
+        <label>
+          Açıklama
+          <input id="editTitle" type="text">
+        </label>
+
+        <label>
+          Kategori
+          <input id="editCategory" type="text">
+        </label>
+
+        <label>
+          Vade
+          <input id="editDue" type="date">
+        </label>
+
+        <label>
+          Tutar
+          <input id="editAmount" type="number" inputmode="decimal">
+        </label>
+
+        <div class="dlgActions">
+          <button id="cancelEdit" class="btn ghost" value="cancel">Vazgeç</button>
+          <button id="saveEdit" class="btn" value="default">Kaydet</button>
+        </div>
+      </form>
+    </dialog>
+
     <footer class="foot">
-      Veriler telefonda saklanır. Safari’de çerezleri/site verilerini silersen gider. (Yani “temizlik” bazen pahalıdır 😄)
+      Veriler sadece cihazında. Repo public olsa da rakamların kimseye gitmez.
     </footer>
   </div>
 
   <script src="app.js"></script>
   <script>
-    // Service worker (offline)
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("./sw.js");
     }
