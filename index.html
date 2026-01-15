@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ödeme Takip</title>
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#111827" />
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- iOS: Ana ekrana ekleme ikonunu daha düzgün gösterir (ikon koymazsan da çalışır) -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Ödeme Takip</h1>
+      <div class="sub">Tik at → gider düşsün → bakiye görünsün. (Dram yok, matematik var.)</div>
+    </header>
+
+    <section class="card">
+      <h2>Gelir</h2>
+      <div class="grid2">
+        <label>
+          Aylık Gelir
+          <input id="income" type="number" inputmode="decimal" placeholder="0">
+        </label>
+        <label>
+          Ek Gelir
+          <input id="extraIncome" type="number" inputmode="decimal" placeholder="0">
+        </label>
+      </div>
+
+      <div class="summary">
+        <div>
+          <div class="k">Toplam Gelir</div>
+          <div class="v" id="totalIncome">0</div>
+        </div>
+        <div>
+          <div class="k">Ödenen Gider</div>
+          <div class="v" id="paidTotal">0</div>
+        </div>
+        <div>
+          <div class="k">Ödenmemiş Gider</div>
+          <div class="v" id="unpaidTotal">0</div>
+        </div>
+        <div class="balance">
+          <div class="k">Kalan Bakiye</div>
+          <div class="v" id="balance">0</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="row">
+        <h2>Giderler</h2>
+        <button id="clearPaid" class="btn ghost" title="Ödenenleri listeden kaldırır (geçmiş kayıt tutmak istersen söyle, arşiv ekleriz)">Ödenenleri Temizle</button>
+      </div>
+
+      <div class="tableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:90px;">Ödendi</th>
+              <th>Açıklama</th>
+              <th style="width:130px;">Kategori</th>
+              <th style="width:110px;">Vade</th>
+              <th style="width:130px;">Tutar</th>
+              <th style="width:90px;"></th>
+            </tr>
+          </thead>
+          <tbody id="expenseBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Yeni Gider Ekle</h2>
+      <div class="grid3">
+        <label>
+          Açıklama
+          <input id="newTitle" type="text" placeholder="Kira, internet, elektrik...">
+        </label>
+        <label>
+          Kategori
+          <input id="newCategory" type="text" placeholder="Fatura">
+        </label>
+        <label>
+          Vade
+          <input id="newDue" type="date">
+        </label>
+        <label class="span2">
+          Tutar
+          <input id="newAmount" type="number" inputmode="decimal" placeholder="0">
+        </label>
+        <div class="actions">
+          <button id="addExpense" class="btn">Ekle</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="foot">
+      Veriler telefonda saklanır. Safari’de çerezleri/site verilerini silersen gider. (Yani “temizlik” bazen pahalıdır 😄)
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    // Service worker (offline)
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./sw.js");
+    }
+  </script>
+</body>
+</html>
